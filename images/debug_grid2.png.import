@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/tetriminos4.png-ebedb8b6b09b42afe4595de445451cfc.stex"
+path="res://.import/debug_grid2.png-c78ae7db3509c6dc5bc939a6bb4cf190.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://tetriminos4.png"
-dest_files=[ "res://.import/tetriminos4.png-ebedb8b6b09b42afe4595de445451cfc.stex" ]
+source_file="res://images/debug_grid2.png"
+dest_files=[ "res://.import/debug_grid2.png-c78ae7db3509c6dc5bc939a6bb4cf190.stex" ]
 
 [params]
 
@@ -20,7 +20,7 @@ compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
-flags/filter=false
+flags/filter=true
 flags/mipmaps=false
 flags/anisotropic=false
 flags/srgb=2

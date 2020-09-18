@@ -17,7 +17,6 @@ _global_script_class_icons={
 
 config/name="Coop-tetris"
 run/main_scene="res://Matrix.tscn"
-config/icon="res://icon.png"
 
 [autoload]
 

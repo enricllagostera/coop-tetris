@@ -1,7 +1,8 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://tetriminos1.png" type="Texture" id=1]
+[ext_resource path="res://images/tetriminos1.png" type="Texture" id=1]
 [ext_resource path="res://Tetro.gd" type="Script" id=2]
+
 
 [node name="Tetro" type="Node2D"]
 position = Vector2( 198.866, 81.1312 )

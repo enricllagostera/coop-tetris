@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/tetriminos6.png-e3e68cd70ed10586e907d55ff3ee0187.stex"
+path="res://.import/tetriminos3.png-7ec566c8341c41935e306541662add8c.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://tetriminos6.png"
-dest_files=[ "res://.import/tetriminos6.png-e3e68cd70ed10586e907d55ff3ee0187.stex" ]
+source_file="res://images/tetriminos3.png"
+dest_files=[ "res://.import/tetriminos3.png-7ec566c8341c41935e306541662add8c.stex" ]
 
 [params]
 
