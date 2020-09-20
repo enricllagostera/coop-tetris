@@ -15,25 +15,28 @@ const SHIFTS = {
 	Dir.N: Vector2(0,0)
 }
 
-const TETROS = {
+const TETROS_REL = {
 	Piece.J: {
 		Rot.R0: [ Vector2(0,0), Vector2(-1,0), Vector2(-1, -1), Vector2(1,0)],
-		Rot.RR: [ Vector2(0,0), Vector2(0,-1), Vector2(1, -1), Vector2(0,1)]
+		Rot.RR: [ Vector2(0,0), Vector2(0,-1), Vector2(1, -1), Vector2(0,1)],
+		Rot.R2: [ Vector2(0,0), Vector2(-1,0), Vector2(1, 0), Vector2(1,1)],
+		Rot.RL: [ Vector2(0,0), Vector2(-1,1), Vector2(0, 1), Vector2(0,-1)]
 	}
 }
 
 const ROT_CLOCKWISE = { Rot.R0 : Rot.RR, Rot.RR: Rot.R2, Rot.R2: Rot.RL, Rot.RL: Rot.R0 }
+const ROT_COUNTERCLOCKWISE = { Rot.R0 : Rot.RL, Rot.RL: Rot.R2, Rot.R2: Rot.RR, Rot.RR: Rot.R0 }
 
 func calc_tetro_abs_coords(origin, piece, rot):
 	var res = []
-	for b in TETROS[piece][rot]:
+	for b in TETROS_REL[piece][rot]:
 		res.append(origin + b)
 	return res
 	pass
 
 func calc_tetro_rel_coords(piece, rot):
 	var res = []
-	for b in TETROS[piece][rot]:
+	for b in TETROS_REL[piece][rot]:
 		res.append(b)
 	return res
 	pass

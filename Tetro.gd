@@ -34,15 +34,6 @@ func render_rotation():
 	if rot == Game.Rot.RL:
 		$Visual.rotation = deg2rad(270)
 
-func shift(dir):
-	get_parent().shift_tetro(self, dir)
-#	var target_coord = coord
-#	if dir == Dir.D:
-#		target_coord += Vector2(0,1)
-##	if unobstructed in the target coord, then apply position
-#	coord = target_coord
-#	position = coord * FTILE
-
 func _process(delta):
 	
 	pass
