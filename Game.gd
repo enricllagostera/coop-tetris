@@ -7,6 +7,8 @@ enum Dir {R, D, L, U, N}
 enum Rot { R0, RR, R2, RL }
 enum Piece { I, O, J, L, T, S, Z}
 
+enum Player { LEFT = 0, RIGHT = 1 }
+
 const SHIFTS = {
 	Dir.D: Vector2(0,1),
 	Dir.R: Vector2(1,0),

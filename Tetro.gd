@@ -6,6 +6,8 @@ var offset = Vector2()
 export var coord = Vector2()
 var rot = Game.Rot.R0
 var piece = Game.Piece.J
+var lock_countdown = false
+var locked = false
 
 var visual_offset_table = {
 	Game.Piece.J: Vector2(-1.5, -1.5)
@@ -15,8 +17,8 @@ var visual_offset_table = {
 func _ready():
 	position = coord * Game.FTILE
 	$Visual.offset = visual_offset_table[Game.Piece.J] * Game.FTILE
-
 	pass # Replace with function body.
+
 
 func rotate_clockwise():
 	var target_rot = Game.ROT_CLOCKWISE[rot]
@@ -34,6 +36,31 @@ func render_rotation():
 	if rot == Game.Rot.RL:
 		$Visual.rotation = deg2rad(270)
 
-func _process(delta):
-	
+
+func lockdown_cancelled():
+	print("tetro lock cancelled")
+	lock_countdown = false
+	locked = false
+	$LockDownTimer.stop()
+	pass
+
+
+func lockdown_completed():
+	print("tetro lock completed")
+	lock_countdown = false
+	locked = true
+	$LockDownTimer.stop()
+	pass
+
+
+func lockdown_started():
+	print("tetro locking")
+	$LockDownTimer.start()
+	lock_countdown = true
+	pass
+
+
+func _on_LockDownTimer_timeout():
+	print("lock down finished")
+	lockdown_completed()
 	pass
