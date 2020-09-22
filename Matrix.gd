@@ -7,19 +7,44 @@ var size = Vector2(10,45)
 var tetro_prefab
 var pieces = []
 var current_player = Game.Player.RIGHT
-var spawn_points = [Vector2(5,1), Vector2(5,41)]
+var lines = 0
+var spawn_points = [Vector2(5,1), Vector2(5,43)]
 var debug_block_prefab
 var debug_blocks = Dictionary()
+var is_updating = false
 
 
 signal piece_lock_down_started
 signal piece_lock_down_cancelled
 
 
+func get_completed_rows():
+	var complete_rows = []
+	for r in range(0, size.y):
+		var is_line_complete = true
+		for c in range(0, size.x):
+			if state[Vector2(c,r)] == 0:
+				is_line_complete = false
+				break
+		if is_line_complete:
+			complete_rows.append(r)
+	return complete_rows
+
+
+
+
+
 func debug_render():
 	for db in debug_blocks.keys():
 		debug_blocks[db].get_node("Solid").visible = (state[db] == 1)
 	pass
+
+
+func is_block_in_piece(block, piece):
+	for c in piece.rel_blocks:
+		if c+piece.coord == block:
+			return true
+	return false
 
 
 func is_colliding(self_blocks, base_coord, blocks_to_check, check_self = true):
@@ -70,11 +95,14 @@ func shift_tetro(tetro, dir, player):
 	if is_out_of_bounds(target_blocks):
 		return
 	if is_colliding(tetro.rel_blocks, tetro.coord, target_blocks):
+#		just started touching the bottom of the piece
 		if (player == Game.Player.LEFT and dir == Game.Dir.D) or (player == Game.Player.RIGHT and dir == Game.Dir.U):
-			tetro.lockdown_started()
+			if not tetro.locking:
+				tetro.lockdown_started()
 		return
-	if tetro.lock_countdown:
+	if tetro.locking:
 		tetro.lockdown_cancelled()
+#	apply movement
 	for b in tetro.rel_blocks:
 		state[tetro.coord+b] = 0
 	tetro.coord += Game.SHIFTS[dir]
@@ -90,6 +118,7 @@ func spawn(origin, player, piece):
 	new_tetro.piece = piece
 	new_tetro.rot = Game.Rot.R0 if player == Game.Player.LEFT else Game.Rot.R2
 	new_tetro.rel_blocks = Game.calc_tetro_rel_coords(new_tetro.piece, new_tetro.rot)
+	new_tetro.player = player
 	var target_blocks = Game.calc_tetro_abs_coords(new_tetro.coord, new_tetro.piece, new_tetro.rot)
 	if is_colliding(new_tetro.rel_blocks, new_tetro.coord, target_blocks, false):
 		print("game over")
@@ -100,8 +129,16 @@ func spawn(origin, player, piece):
 	if pieces[player] is Node:
 		pieces[player].queue_free()
 	pieces[player] = new_tetro
-	debug_render()
 	pass
+
+
+func block_locked(player):
+	is_updating = true
+	update_score()
+	spawn(spawn_points[player], player, Game.Piece.J)
+	debug_render()
+	is_updating = false
+	
 
 
 func _ready():
@@ -122,27 +159,55 @@ func _ready():
 	pass
 
 
-func _process(delta):
-	if Input.is_action_just_released("ui_select"):
-		pieces[current_player].lockdown_completed()
-		spawn(spawn_points[current_player], current_player, Game.Piece.J)
+
+
+func update_score():
+	var rows = get_completed_rows()
+	if rows.size() == 0:
 		return
-	if Input.is_action_just_released("ui_left"):
-		rotate_tetro(pieces[current_player], true)
-	if Input.is_action_just_released("ui_right"):
-		shift_tetro(pieces[current_player], Game.Dir.D, current_player)
-	if Input.is_action_just_released("ui_down"):
-		shift_tetro(pieces[current_player], Game.Dir.L, current_player)
-	if Input.is_action_just_released("ui_up"):
-		shift_tetro(pieces[current_player], Game.Dir.R, current_player)
+	for r in rows:
+		lines += 1
+		if r < 23:
+			for s in range(r, 1, -1):
+				for c in range(0, size.x):
+					if is_block_in_piece(Vector2(c,s), pieces[Game.Player.LEFT]) or is_block_in_piece(Vector2(c,s), pieces[Game.Player.RIGHT]):
+						continue
+					state[Vector2(c,s)] = state[Vector2(c,s-1)] if s>0 else 0
+		else: 
+			for s in range(r, size.y-1, 1):
+				for c in range(0, size.x):
+					if is_block_in_piece(Vector2(c,s), pieces[Game.Player.LEFT]) or is_block_in_piece(Vector2(c,s), pieces[Game.Player.RIGHT]):
+						continue
+					state[Vector2(c,s)] = state[Vector2(c,s+1)] if s<size.y else 0
+	print("lines: ", lines)
+	pass
+	
+
+func _process(delta):
+	if is_updating:
+		return
+	if Input.is_action_just_released("pl_rot_c"):
+		rotate_tetro(pieces[Game.Player.LEFT], true)
+	if Input.is_action_just_released("pl_up"):
+		shift_tetro(pieces[Game.Player.LEFT], Game.Dir.R, Game.Player.LEFT)
+	if Input.is_action_just_released("pl_down"):
+		shift_tetro(pieces[Game.Player.LEFT], Game.Dir.L, Game.Player.LEFT)
+	if Input.is_action_just_released("pl_drop_soft"):
+		shift_tetro(pieces[Game.Player.LEFT], Game.Dir.D, Game.Player.LEFT)
+		
+	if Input.is_action_just_released("pr_rot_c"):
+		rotate_tetro(pieces[Game.Player.RIGHT], true)
+	if Input.is_action_just_released("pr_up"):
+		shift_tetro(pieces[Game.Player.RIGHT], Game.Dir.R, Game.Player.RIGHT)
+	if Input.is_action_just_released("pr_down"):
+		shift_tetro(pieces[Game.Player.RIGHT], Game.Dir.L, Game.Player.RIGHT)
+	if Input.is_action_just_released("pr_drop_soft"):
+		shift_tetro(pieces[Game.Player.RIGHT], Game.Dir.U, Game.Player.RIGHT)
 	pass
 
 
 func _on_TickTimer_timeout():
 	for i in range(0,2):
-		if pieces[i].locked:
-			spawn(spawn_points[i], i, Game.Piece.J)
-		elif not pieces[i].locked:
-			shift_tetro(pieces[i], Game.Dir.D if i == Game.Player.LEFT else Game.Dir.U, i)
+		shift_tetro(pieces[i], Game.Dir.D if i == Game.Player.LEFT else Game.Dir.U, i)
 	pass
 
