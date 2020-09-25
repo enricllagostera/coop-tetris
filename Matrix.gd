@@ -3,15 +3,16 @@ extends Node2D
 
 export var tick_interval = 0.5
 var state = Dictionary()
-var size = Vector2(10,44)
+var size = Vector2(20,34)
 var tetro_prefab
 var pieces = []
 var current_player = Game.Player.RIGHT
 var lines = 0
-var spawn_points = [Vector2(5,1), Vector2(5,42)]
+var spawn_points = [Vector2(10,1), Vector2(10,32)]
 var debug_block_prefab
 var debug_blocks = Dictionary()
 var is_updating = false
+var grid_origin
 
 
 signal piece_lock_down_started
@@ -145,8 +146,12 @@ func _ready():
 	pieces = [0,0]
 	tetro_prefab = load("Tetro.tscn")
 	debug_block_prefab = load("DebugBlock.tscn")
-	for row in range(0,45):
-		for col in range(0,10):
+	grid_origin = Vector2()
+	grid_origin.x = (ProjectSettings.get_setting("display/window/size/width") - (size.y * Game.FTILE))/2
+	grid_origin.y = (ProjectSettings.get_setting("display/window/size/height") + (size.x * Game.FTILE))/2
+	$Grid.position = grid_origin
+	for row in range(0,size.y):
+		for col in range(0,size.x):
 			state[Vector2(col, row)] = 0
 			debug_blocks[Vector2(col, row)] = debug_block_prefab.instance()
 			$Grid.add_child(debug_blocks[Vector2(col, row)])
@@ -157,13 +162,11 @@ func _ready():
 	pass
 
 
-
-
 func update_score():
 	var rows = get_completed_rows()
 	if rows.size() == 0:
 		return
-	$Tween.interpolate_property($Grid, "position", Vector2(-352,88 + rows.size()*8), Vector2(-352,88), .3, Tween.TRANS_ELASTIC, Tween.EASE_OUT)
+	$Tween.interpolate_property($Grid, "position", grid_origin + Vector2(0, rows.size()*8), grid_origin, .4, Tween.TRANS_ELASTIC, Tween.EASE_OUT)
 	$Tween.start()
 	for r in rows:
 		lines += 1

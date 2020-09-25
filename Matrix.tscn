@@ -4,15 +4,15 @@
 [ext_resource path="res://Matrix.gd" type="Script" id=2]
 
 [node name="Matrix" type="Node2D"]
-position = Vector2( 352, 200 )
 script = ExtResource( 2 )
 
 [node name="GoalLine" type="Sprite" parent="."]
+visible = false
 position = Vector2( -8, 0 )
 texture = ExtResource( 1 )
 
 [node name="Grid" type="Node2D" parent="."]
-position = Vector2( -352, 88 )
+position = Vector2( 112, 352 )
 rotation = -1.5708
 
 [node name="TickTimer" type="Timer" parent="."]
