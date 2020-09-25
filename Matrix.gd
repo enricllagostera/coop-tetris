@@ -142,6 +142,7 @@ func block_locked(player):
 
 
 func _ready():
+	Input.add_joy_mapping("00000000000000000000000000000000,XInput Controller,a:b0,b:b1,back:b6,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b10,leftshoulder:b4,leftstick:b8,lefttrigger:a2,leftx:a0,lefty:a1,rightshoulder:b5,rightstick:b9,righttrigger:a5,rightx:a3,righty:a4,start:b7,x:b2,y:b3,platform:Android,", true)
 	$TickTimer.wait_time = tick_interval
 	pieces = [0,0]
 	tetro_prefab = load("Tetro.tscn")
@@ -180,7 +181,12 @@ func update_score():
 					state[Vector2(c,s)] = state[Vector2(c,s+1)] if s<size.y else 0
 	print("lines: ", lines)
 	pass
-	
+
+
+func _input(ev):
+	if ev is InputEventMouseButton or ev is InputEventJoypadButton:
+		OS.window_fullscreen = true
+	pass
 
 func _process(delta):
 	pieces[0].render()
@@ -190,6 +196,8 @@ func _process(delta):
 		return
 	if Input.is_action_just_released("pl_rot_c"):
 		rotate_tetro(pieces[Game.Player.LEFT], true)
+	if Input.is_action_just_released("pl_rot_cc"):
+		rotate_tetro(pieces[Game.Player.LEFT], false)
 	if Input.is_action_just_released("pl_up"):
 		shift_tetro(pieces[Game.Player.LEFT], Game.Dir.R, Game.Player.LEFT)
 	if Input.is_action_just_released("pl_down"):
@@ -199,6 +207,8 @@ func _process(delta):
 		
 	if Input.is_action_just_released("pr_rot_c"):
 		rotate_tetro(pieces[Game.Player.RIGHT], true)
+	if Input.is_action_just_released("pr_rot_cc"):
+		rotate_tetro(pieces[Game.Player.RIGHT], false)
 	if Input.is_action_just_released("pr_up"):
 		shift_tetro(pieces[Game.Player.RIGHT], Game.Dir.R, Game.Player.RIGHT)
 	if Input.is_action_just_released("pr_down"):
