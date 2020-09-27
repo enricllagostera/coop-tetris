@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/tetriminos1.png-a4efce477d54b80fac826045dfe4d985.stex"
+path="res://.import/tetro_block2.png-ada0c6a23b0ec983f48d7c5656990f0a.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/tetriminos1.png"
-dest_files=[ "res://.import/tetriminos1.png-a4efce477d54b80fac826045dfe4d985.stex" ]
+source_file="res://images/tetro_block2.png"
+dest_files=[ "res://.import/tetro_block2.png-ada0c6a23b0ec983f48d7c5656990f0a.stex" ]
 
 [params]
 
@@ -20,7 +20,7 @@ compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
-flags/filter=true
+flags/filter=false
 flags/mipmaps=false
 flags/anisotropic=false
 flags/srgb=2

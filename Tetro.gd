@@ -1,5 +1,6 @@
 extends Node2D
 
+
 var rel_blocks = [Vector2(0,0), Vector2(-1,-1), Vector2(-1,0), Vector2(1,0)]
 onready var visual_blocks = [$Block0, $Block1, $Block2, $Block3]
 var offset = Vector2()
@@ -20,6 +21,7 @@ func render():
 	var blocks = get_abs_blocks()
 	for i in range(0, blocks.size()):
 		visual_blocks[i].position = blocks[i] * Game.FTILE
+		visual_blocks[i].modulate = Color(Game.Colors[piece])
 	pass
 
 
