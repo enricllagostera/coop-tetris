@@ -17,6 +17,13 @@ func rotate_clockwise():
 	rot = target_rot
 
 
+func render_for_ui():
+	for i in range(0, rel_blocks.size()):
+		visual_blocks[i].position = rel_blocks[i] * Game.FTILE
+		visual_blocks[i].modulate = Color.white
+	pass
+
+
 func render():
 	var blocks = get_abs_blocks()
 	for i in range(0, blocks.size()):

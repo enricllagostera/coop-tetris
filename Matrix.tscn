@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://images/goal_line.png" type="Texture" id=1]
 [ext_resource path="res://Matrix.gd" type="Script" id=2]
 [ext_resource path="res://images/mockup.png" type="Texture" id=3]
 [ext_resource path="res://images/noise.png" type="Texture" id=4]
+[ext_resource path="res://Tetro.tscn" type="PackedScene" id=5]
 
 [node name="Matrix" type="Node2D"]
 script = ExtResource( 2 )
@@ -29,4 +30,14 @@ texture = ExtResource( 4 )
 centered = false
 
 [node name="Tween" type="Tween" parent="."]
+
+[node name="TetroPreviewLeft" parent="." instance=ExtResource( 5 )]
+position = Vector2( 32, 176 )
+rotation = -1.5708
+coord = Vector2( 0, 0 )
+
+[node name="TetroPreviewRight" parent="." instance=ExtResource( 5 )]
+position = Vector2( 592, 176 )
+rotation = -1.5708
+coord = Vector2( 0, 0 )
 [connection signal="timeout" from="TickTimer" to="." method="_on_TickTimer_timeout"]

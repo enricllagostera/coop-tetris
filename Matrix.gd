@@ -111,11 +111,6 @@ func shift_tetro(tetro, dir, player):
 		return
 	if tetro.locking:
 		tetro.lockdown_cancelled()
-#
-##	just started touching the bottom of the piece
-#		if (player == Game.Player.LEFT and dir == Game.Dir.D) or (player == Game.Player.RIGHT and dir == Game.Dir.U):
-#			if not tetro.locking:
-#				tetro.lockdown_started()
 	move_tetro(tetro, dir)
 	debug_render()
 	pass
@@ -126,10 +121,10 @@ func move_tetro(tetro, dir):
 	pass
 
 
-func spawn(origin, player, piece):
+func spawn(origin, player):
 	var new_tetro = tetro_prefab.instance()
 	new_tetro.coord = origin
-	new_tetro.piece = piece
+	new_tetro.piece = bags[player].pop_next()
 	new_tetro.rot = Game.Rot.R0 if player == Game.Player.LEFT else Game.Rot.R2
 	new_tetro.rel_blocks = Game.calc_tetro_rel_coords(new_tetro.piece, new_tetro.rot)
 	new_tetro.player = player
@@ -140,6 +135,7 @@ func spawn(origin, player, piece):
 		return 
 	$Grid.add_child(new_tetro)
 	pieces[player] = new_tetro
+	update_preview(player)
 	pass
 
 
@@ -151,7 +147,7 @@ func block_locked(player):
 	$Tween.interpolate_property($Grid, "position", grid_origin + Vector2(0, 4), grid_origin, .1, Tween.TRANS_ELASTIC, Tween.EASE_OUT)
 	$Tween.start()
 	update_score()
-	spawn(spawn_points[player], player, bags[player].pop_next())
+	spawn(spawn_points[player], player)
 	debug_render()
 	is_updating = false
 
@@ -177,9 +173,20 @@ func _ready():
 			$Grid.add_child(debug_blocks[Vector2(col, row)])
 			debug_blocks[Vector2(col, row)].position = Vector2(col, row) * 16
 			debug_blocks[Vector2(col, row)].get_node("Solid").visible = false
-	spawn(spawn_points[Game.Player.LEFT], Game.Player.LEFT, bags[Game.Player.LEFT].pop_next())
-	spawn(spawn_points[Game.Player.RIGHT], Game.Player.RIGHT, bags[Game.Player.RIGHT].pop_next())
+	spawn(spawn_points[Game.Player.LEFT], Game.Player.LEFT)
+	spawn(spawn_points[Game.Player.RIGHT], Game.Player.RIGHT)
 	pass
+
+
+func update_preview(player):
+	var preview_tetro = $TetroPreviewLeft if player == Game.Player.LEFT else $TetroPreviewRight
+	var target_tetro = bags[player].view_next()
+	preview_tetro.piece = target_tetro
+	preview_tetro.rot = Game.Rot.R0 if player == Game.Player.LEFT else Game.Rot.R2
+	preview_tetro.rel_blocks = Game.calc_tetro_rel_coords(preview_tetro.piece, preview_tetro.rot)
+	preview_tetro.render_for_ui()
+	pass
+
 
 
 func update_score():
@@ -247,8 +254,8 @@ func _on_TickTimer_timeout():
 		return
 	for i in range(0,2):
 		shift_tetro(pieces[i], Game.Dir.D if i == Game.Player.LEFT else Game.Dir.U, i)
+#	Speed increase as more lines are made
 	tick_interval = tick_interval_base * clamp(1-lines*0.005, 0.5, 1.0)
-	print(tick_interval)
 	$TickTimer.wait_time = tick_interval
 	pass
 
