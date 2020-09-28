@@ -1,15 +1,15 @@
 extends Node2D
 
 
-export var tick_interval = 0.5
-export var tick_interval_base = 0.5
+export var tick_interval_base = 0.8
+var tick_interval = 1
 var state = Dictionary()
-var size = Vector2(20,30)
+var size = Vector2(16,30)
 var tetro_prefab
 var pieces = []
 var current_player = Game.Player.RIGHT
 var lines = 0
-var spawn_points = [Vector2(10,1), Vector2(10,28)]
+var spawn_points = [Vector2(8,1), Vector2(8,28)]
 var debug_block_prefab
 var debug_blocks = Dictionary()
 var is_updating = false
@@ -175,6 +175,7 @@ func _ready():
 			debug_blocks[Vector2(col, row)].get_node("Solid").visible = false
 	spawn(spawn_points[Game.Player.LEFT], Game.Player.LEFT)
 	spawn(spawn_points[Game.Player.RIGHT], Game.Player.RIGHT)
+	$ScoreLabel.text = "%s" % lines
 	pass
 
 
@@ -206,6 +207,7 @@ func update_score():
 				for c in range(0, size.x):
 					state[Vector2(c,s)] = state[Vector2(c,s+1)] if s<size.y else 0
 	print("lines: ", lines)
+	$ScoreLabel.text = "%s" % lines
 	pass
 
 
