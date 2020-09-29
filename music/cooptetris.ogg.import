@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/cooptetris.ogg-a6b125c96bc67f37415c6f39efcabf1a.oggstr"
+
+[deps]
+
+source_file="res://music/cooptetris.ogg"
+dest_files=[ "res://.import/cooptetris.ogg-a6b125c96bc67f37415c6f39efcabf1a.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0
