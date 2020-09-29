@@ -1,11 +1,18 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://PF_ARMA_FIVE.TTF" type="DynamicFontData" id=1]
 [ext_resource path="res://Matrix.gd" type="Script" id=2]
 [ext_resource path="res://images/mockup.png" type="Texture" id=3]
 [ext_resource path="res://images/noise.png" type="Texture" id=4]
 [ext_resource path="res://Tetro.tscn" type="PackedScene" id=5]
-[ext_resource path="res://music/tetris_01.wav" type="AudioStream" id=6]
+[ext_resource path="res://SFXPlayer.gd" type="Script" id=7]
+[ext_resource path="res://sfx/Rotate.wav" type="AudioStream" id=8]
+[ext_resource path="res://sfx/Tick.wav" type="AudioStream" id=9]
+[ext_resource path="res://sfx/Locked.wav" type="AudioStream" id=10]
+[ext_resource path="res://sfx/Move.wav" type="AudioStream" id=11]
+[ext_resource path="res://sfx/Locking.wav" type="AudioStream" id=12]
+[ext_resource path="res://music/tetris.ogg" type="AudioStream" id=13]
+[ext_resource path="res://sfx/Lines.wav" type="AudioStream" id=14]
 
 [sub_resource type="DynamicFont" id=1]
 size = 44
@@ -59,7 +66,34 @@ __meta__ = {
 }
 
 [node name="Music" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 6 )
-volume_db = -80.0
+stream = ExtResource( 13 )
+volume_db = -7.5
 autoplay = true
+
+[node name="SFXPlayer" type="Node2D" parent="."]
+script = ExtResource( 7 )
+
+[node name="Locking" type="AudioStreamPlayer" parent="SFXPlayer"]
+stream = ExtResource( 12 )
+volume_db = -2.974
+
+[node name="Locked" type="AudioStreamPlayer" parent="SFXPlayer"]
+stream = ExtResource( 10 )
+volume_db = -1.65
+
+[node name="Lines" type="AudioStreamPlayer" parent="SFXPlayer"]
+stream = ExtResource( 14 )
+volume_db = -5.026
+
+[node name="Move" type="AudioStreamPlayer" parent="SFXPlayer"]
+stream = ExtResource( 11 )
+volume_db = -8.175
+
+[node name="Rotate" type="AudioStreamPlayer" parent="SFXPlayer"]
+stream = ExtResource( 8 )
+volume_db = -4.676
+
+[node name="Tick" type="AudioStreamPlayer" parent="SFXPlayer"]
+stream = ExtResource( 9 )
+volume_db = -12.078
 [connection signal="timeout" from="TickTimer" to="." method="_on_TickTimer_timeout"]

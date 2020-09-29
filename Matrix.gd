@@ -106,6 +106,7 @@ func shift_tetro(tetro, dir, player):
 	if is_colliding_blocks(target_blocks, tetro.get_abs_blocks(), pieces[Game.Player.LEFT if player == Game.Player.RIGHT else Game.Player.RIGHT]):
 		if not tetro.locking:
 			tetro.lockdown_started()
+			$SFXPlayer.play_sfx($SFXPlayer/Locking)
 			$Tween.interpolate_property(tetro, "position", tetro.position + Vector2(0, 8), tetro.position, .2, Tween.TRANS_ELASTIC, Tween.EASE_OUT)
 			$Tween.start()
 		return
@@ -146,6 +147,7 @@ func block_locked(player):
 	pieces[player].queue_free()
 	$Tween.interpolate_property($Grid, "position", grid_origin + Vector2(0, 4), grid_origin, .1, Tween.TRANS_ELASTIC, Tween.EASE_OUT)
 	$Tween.start()
+	$SFXPlayer.play_sfx($SFXPlayer/Locked)
 	update_score()
 	spawn(spawn_points[player], player)
 	debug_render()
@@ -196,6 +198,7 @@ func update_score():
 		return
 	$Tween.interpolate_property($Grid, "position", grid_origin + Vector2(0, rows.size()*16), grid_origin, .2, Tween.TRANS_ELASTIC, Tween.EASE_OUT)
 	$Tween.start()
+	$SFXPlayer.play_sfx($SFXPlayer/Lines)
 	for r in rows:
 		lines += 1
 		if r < size.y / 2:
@@ -228,25 +231,35 @@ func _process(delta):
 	if is_updating:
 		return
 	if Input.is_action_just_released("pl_rot_c"):
+		$SFXPlayer.play_sfx($SFXPlayer/Rotate)
 		rotate_tetro(pieces[Game.Player.LEFT], true)
 	if Input.is_action_just_released("pl_rot_cc"):
+		$SFXPlayer.play_sfx($SFXPlayer/Rotate)
 		rotate_tetro(pieces[Game.Player.LEFT], false)
 	if Input.is_action_just_released("pl_up"):
+		$SFXPlayer.play_sfx($SFXPlayer/Move)
 		shift_tetro(pieces[Game.Player.LEFT], Game.Dir.R, Game.Player.LEFT)
 	if Input.is_action_just_released("pl_down"):
+		$SFXPlayer.play_sfx($SFXPlayer/Move)
 		shift_tetro(pieces[Game.Player.LEFT], Game.Dir.L, Game.Player.LEFT)
 	if Input.is_action_just_released("pl_drop_soft"):
+		$SFXPlayer.play_sfx($SFXPlayer/Move)
 		shift_tetro(pieces[Game.Player.LEFT], Game.Dir.D, Game.Player.LEFT)
 		
 	if Input.is_action_just_released("pr_rot_c"):
+		$SFXPlayer.play_sfx($SFXPlayer/Rotate)
 		rotate_tetro(pieces[Game.Player.RIGHT], true)
 	if Input.is_action_just_released("pr_rot_cc"):
+		$SFXPlayer.play_sfx($SFXPlayer/Rotate)
 		rotate_tetro(pieces[Game.Player.RIGHT], false)
 	if Input.is_action_just_released("pr_up"):
+		$SFXPlayer.play_sfx($SFXPlayer/Move)
 		shift_tetro(pieces[Game.Player.RIGHT], Game.Dir.R, Game.Player.RIGHT)
 	if Input.is_action_just_released("pr_down"):
+		$SFXPlayer.play_sfx($SFXPlayer/Move)		
 		shift_tetro(pieces[Game.Player.RIGHT], Game.Dir.L, Game.Player.RIGHT)
 	if Input.is_action_just_released("pr_drop_soft"):
+		$SFXPlayer.play_sfx($SFXPlayer/Move)
 		shift_tetro(pieces[Game.Player.RIGHT], Game.Dir.U, Game.Player.RIGHT)
 	pass
 
@@ -259,5 +272,6 @@ func _on_TickTimer_timeout():
 #	Speed increase as more lines are made
 	tick_interval = tick_interval_base * clamp(1-lines*0.005, 0.5, 1.0)
 	$TickTimer.wait_time = tick_interval
+	$SFXPlayer.play_sfx($SFXPlayer/Tick)
 	pass
 
