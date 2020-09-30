@@ -31,10 +31,6 @@ rotation = -1.5708
 
 [node name="TickTimer" type="Timer" parent="."]
 
-[node name="Foreground" type="Sprite" parent="."]
-texture = ExtResource( 4 )
-centered = false
-
 [node name="Tween" type="Tween" parent="."]
 
 [node name="TetroPreviewLeft" parent="." instance=ExtResource( 5 )]
@@ -46,23 +42,6 @@ coord = Vector2( 0, 0 )
 position = Vector2( 592, 176 )
 rotation = -1.5708
 coord = Vector2( 0, 0 )
-
-[node name="ScoreLabel" type="Label" parent="."]
-margin_left = 80.0
-margin_top = -11.0
-margin_right = 560.0
-margin_bottom = 61.0
-custom_fonts/font = ExtResource( 16 )
-custom_colors/font_color = Color( 1, 0.819608, 0, 1 )
-custom_colors/font_color_shadow = Color( 0.980392, 0.992157, 1, 1 )
-custom_constants/shadow_offset_x = 0
-custom_constants/shadow_offset_y = 2
-text = "XX"
-align = 1
-valign = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="SFXPlayer" type="Node2D" parent="."]
 script = ExtResource( 7 )
@@ -100,6 +79,23 @@ stream = ExtResource( 13 )
 volume_db = -7.5
 autoplay = true
 
+[node name="ScoreLabel" type="Label" parent="."]
+margin_left = 80.0
+margin_top = -11.0
+margin_right = 560.0
+margin_bottom = 61.0
+custom_fonts/font = ExtResource( 16 )
+custom_colors/font_color = Color( 1, 0.819608, 0, 1 )
+custom_colors/font_color_shadow = Color( 0.980392, 0.992157, 1, 1 )
+custom_constants/shadow_offset_x = 0
+custom_constants/shadow_offset_y = 2
+text = "XX"
+align = 1
+valign = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="IntroModal" type="Sprite" parent="."]
 z_index = 1
 texture = ExtResource( 15 )
@@ -115,7 +111,7 @@ custom_colors/font_color = Color( 0.0862745, 0.0901961, 0.101961, 1 )
 custom_colors/font_color_shadow = Color( 0.984314, 0.992157, 1, 1 )
 custom_constants/shadow_offset_x = 0
 custom_constants/shadow_offset_y = 2
-text = "COOP TETRIS"
+text = "tecro-tecro"
 align = 1
 valign = 3
 __meta__ = {
@@ -123,9 +119,8 @@ __meta__ = {
 }
 
 [node name="InstructionsLabel" type="Label" parent="IntroModal"]
-margin_left = 192.0
 margin_top = 192.0
-margin_right = 672.0
+margin_right = 1280.0
 margin_bottom = 264.0
 rect_scale = Vector2( 0.5, 0.5 )
 custom_fonts/font = ExtResource( 16 )
@@ -133,7 +128,7 @@ custom_colors/font_color = Color( 0.137255, 0.286275, 0.458824, 1 )
 custom_colors/font_color_shadow = Color( 1, 0.819608, 0, 1 )
 custom_constants/shadow_offset_x = 0
 custom_constants/shadow_offset_y = 2
-text = "Press start"
+text = "Aperte start / Press start"
 align = 1
 valign = 3
 __meta__ = {
@@ -164,9 +159,8 @@ __meta__ = {
 }
 
 [node name="InstructionsLabel" type="Label" parent="GameOverModal"]
-margin_left = 192.0
 margin_top = 192.0
-margin_right = 672.0
+margin_right = 1280.0
 margin_bottom = 264.0
 rect_scale = Vector2( 0.5, 0.5 )
 custom_fonts/font = ExtResource( 16 )
@@ -174,10 +168,14 @@ custom_colors/font_color = Color( 0.937255, 0.94902, 0.956863, 1 )
 custom_colors/font_color_shadow = Color( 0.137255, 0.286275, 0.458824, 1 )
 custom_constants/shadow_offset_x = 0
 custom_constants/shadow_offset_y = 2
-text = "Press start"
+text = "Aperte start / Press start"
 align = 1
 valign = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Foreground" type="Sprite" parent="."]
+texture = ExtResource( 4 )
+centered = false
 [connection signal="timeout" from="TickTimer" to="." method="_on_TickTimer_timeout"]

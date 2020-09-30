@@ -86,7 +86,7 @@ func rotate_tetro(tetro, is_clockwise):
 	if is_horizontally_out_of_bounds(target_blocks_abs):
 		return
 	if is_vertically_out_of_bounds(target_blocks_abs):
-		is_game_over = true
+		begin_game_over()
 		return
 	if is_colliding_blocks(target_blocks_abs, tetro.get_abs_blocks()):
 		return
@@ -143,7 +143,7 @@ func spawn(origin, player):
 func begin_game_over():
 	is_game_over = true
 	$SFXPlayer.play_solo($SFXPlayer/GameOver)
-	$Tween.interpolate_property($GameOverModal, "position", Vector2(0, -320), Vector2(0, 0), .3, Tween.TRANS_BACK, Tween.EASE_IN_OUT)
+	$Tween.interpolate_property($GameOverModal, "position", Vector2(0, -320), Vector2(0, 0), 3.0, Tween.TRANS_BOUNCE, Tween.EASE_OUT)
 	$Tween.start()
 
 func block_locked(player):
@@ -161,6 +161,7 @@ func block_locked(player):
 
 
 func _ready():
+	$SFXPlayer/Music.volume_db = -18.5
 	$ScoreLabel.text = "%s" % lines
 	pass
 
@@ -236,6 +237,7 @@ func _process(delta):
 			$SFXPlayer.play_sfx($SFXPlayer/Lines)
 			$Tween.interpolate_property($IntroModal, "position", Vector2(0, 0), Vector2(0, -320), .3, Tween.TRANS_BACK, Tween.EASE_IN_OUT)
 			$Tween.start()
+			$SFXPlayer/Music.volume_db = -7.5
 			start()
 		return
 	
