@@ -16,6 +16,7 @@ var is_updating = false
 var grid_origin
 var bags = {}
 var is_game_over = false
+var is_intro_modal = true
 
 
 signal piece_lock_down_started
@@ -101,7 +102,7 @@ func shift_tetro(tetro, dir, player):
 	if is_horizontally_out_of_bounds(target_blocks):
 		return
 	if is_vertically_out_of_bounds(target_blocks):
-		is_game_over = true
+		begin_game_over()
 		return
 	if is_colliding_blocks(target_blocks, tetro.get_abs_blocks(), pieces[Game.Player.LEFT if player == Game.Player.RIGHT else Game.Player.RIGHT]):
 		if not tetro.locking:
@@ -131,14 +132,19 @@ func spawn(origin, player):
 	new_tetro.player = player
 	var target_blocks = Game.calc_tetro_abs_coords(new_tetro.coord, new_tetro.piece, new_tetro.rot)
 	if is_colliding_blocks(target_blocks):
-		print("game over")
-		is_game_over = true
+		begin_game_over()
 		return 
 	$Grid.add_child(new_tetro)
 	pieces[player] = new_tetro
 	update_preview(player)
 	pass
 
+
+func begin_game_over():
+	is_game_over = true
+	$SFXPlayer.play_solo($SFXPlayer/GameOver)
+	$Tween.interpolate_property($GameOverModal, "position", Vector2(0, -320), Vector2(0, 0), .3, Tween.TRANS_BACK, Tween.EASE_IN_OUT)
+	$Tween.start()
 
 func block_locked(player):
 	is_updating = true
@@ -155,8 +161,13 @@ func block_locked(player):
 
 
 func _ready():
+	$ScoreLabel.text = "%s" % lines
+	pass
+
+func start():
 	tick_interval = tick_interval_base
 	$TickTimer.wait_time = tick_interval
+	$TickTimer.start()
 	bags = {
 		Game.Player.LEFT: PieceBag.new(),
 		Game.Player.RIGHT: PieceBag.new()
@@ -177,8 +188,6 @@ func _ready():
 			debug_blocks[Vector2(col, row)].get_node("Solid").visible = false
 	spawn(spawn_points[Game.Player.LEFT], Game.Player.LEFT)
 	spawn(spawn_points[Game.Player.RIGHT], Game.Player.RIGHT)
-	$ScoreLabel.text = "%s" % lines
-	pass
 
 
 func update_preview(player):
@@ -220,6 +229,16 @@ func _input(ev):
 	pass
 
 func _process(delta):
+	if is_intro_modal:
+		if Input.is_action_just_released("restart"):
+			is_intro_modal = false
+#			$IntroModal.visible = false
+			$SFXPlayer.play_sfx($SFXPlayer/Lines)
+			$Tween.interpolate_property($IntroModal, "position", Vector2(0, 0), Vector2(0, -320), .3, Tween.TRANS_BACK, Tween.EASE_IN_OUT)
+			$Tween.start()
+			start()
+		return
+	
 	if is_game_over:
 		if Input.is_action_just_released("restart"):
 			get_tree().reload_current_scene()
@@ -270,7 +289,8 @@ func _on_TickTimer_timeout():
 	for i in range(0,2):
 		shift_tetro(pieces[i], Game.Dir.D if i == Game.Player.LEFT else Game.Dir.U, i)
 #	Speed increase as more lines are made
-	tick_interval = tick_interval_base * clamp(1-lines*0.005, 0.5, 1.0)
+	tick_interval = tick_interval_base * clamp(1-lines*0.01, 0.35, 1.0)
+	$SFXPlayer/Music.pitch_scale = 1 + (tick_interval_base - tick_interval) * 0.3
 	$TickTimer.wait_time = tick_interval
 	$SFXPlayer.play_sfx($SFXPlayer/Tick)
 	pass

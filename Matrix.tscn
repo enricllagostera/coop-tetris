@@ -1,10 +1,11 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=18 format=2]
 
-[ext_resource path="res://PF_ARMA_FIVE.TTF" type="DynamicFontData" id=1]
+[ext_resource path="res://TitleFont.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Matrix.gd" type="Script" id=2]
 [ext_resource path="res://images/mockup.png" type="Texture" id=3]
 [ext_resource path="res://images/noise.png" type="Texture" id=4]
 [ext_resource path="res://Tetro.tscn" type="PackedScene" id=5]
+[ext_resource path="res://sfx/GameOver.wav" type="AudioStream" id=6]
 [ext_resource path="res://SFXPlayer.gd" type="Script" id=7]
 [ext_resource path="res://sfx/Rotate.wav" type="AudioStream" id=8]
 [ext_resource path="res://sfx/Tick.wav" type="AudioStream" id=9]
@@ -13,10 +14,9 @@
 [ext_resource path="res://sfx/Locking.wav" type="AudioStream" id=12]
 [ext_resource path="res://music/tetris.ogg" type="AudioStream" id=13]
 [ext_resource path="res://sfx/Lines.wav" type="AudioStream" id=14]
-
-[sub_resource type="DynamicFont" id=1]
-size = 44
-font_data = ExtResource( 1 )
+[ext_resource path="res://images/intro.png" type="Texture" id=15]
+[ext_resource path="res://ScoreFont.tres" type="DynamicFont" id=16]
+[ext_resource path="res://images/gameover.png" type="Texture" id=17]
 
 [node name="Matrix" type="Node2D"]
 script = ExtResource( 2 )
@@ -30,7 +30,6 @@ position = Vector2( 112, 352 )
 rotation = -1.5708
 
 [node name="TickTimer" type="Timer" parent="."]
-autostart = true
 
 [node name="Foreground" type="Sprite" parent="."]
 texture = ExtResource( 4 )
@@ -53,7 +52,7 @@ margin_left = 80.0
 margin_top = -11.0
 margin_right = 560.0
 margin_bottom = 61.0
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = ExtResource( 16 )
 custom_colors/font_color = Color( 1, 0.819608, 0, 1 )
 custom_colors/font_color_shadow = Color( 0.980392, 0.992157, 1, 1 )
 custom_constants/shadow_offset_x = 0
@@ -64,11 +63,6 @@ valign = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="Music" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 13 )
-volume_db = -7.5
-autoplay = true
 
 [node name="SFXPlayer" type="Node2D" parent="."]
 script = ExtResource( 7 )
@@ -96,4 +90,94 @@ volume_db = -4.676
 [node name="Tick" type="AudioStreamPlayer" parent="SFXPlayer"]
 stream = ExtResource( 9 )
 volume_db = -12.078
+
+[node name="GameOver" type="AudioStreamPlayer" parent="SFXPlayer"]
+stream = ExtResource( 6 )
+volume_db = -3.974
+
+[node name="Music" type="AudioStreamPlayer" parent="SFXPlayer"]
+stream = ExtResource( 13 )
+volume_db = -7.5
+autoplay = true
+
+[node name="IntroModal" type="Sprite" parent="."]
+z_index = 1
+texture = ExtResource( 15 )
+centered = false
+
+[node name="TitleLabel" type="Label" parent="IntroModal"]
+margin_left = 80.0
+margin_top = 112.0
+margin_right = 560.0
+margin_bottom = 200.0
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.0862745, 0.0901961, 0.101961, 1 )
+custom_colors/font_color_shadow = Color( 0.984314, 0.992157, 1, 1 )
+custom_constants/shadow_offset_x = 0
+custom_constants/shadow_offset_y = 2
+text = "COOP TETRIS"
+align = 1
+valign = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InstructionsLabel" type="Label" parent="IntroModal"]
+margin_left = 192.0
+margin_top = 192.0
+margin_right = 672.0
+margin_bottom = 264.0
+rect_scale = Vector2( 0.5, 0.5 )
+custom_fonts/font = ExtResource( 16 )
+custom_colors/font_color = Color( 0.137255, 0.286275, 0.458824, 1 )
+custom_colors/font_color_shadow = Color( 1, 0.819608, 0, 1 )
+custom_constants/shadow_offset_x = 0
+custom_constants/shadow_offset_y = 2
+text = "Press start"
+align = 1
+valign = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GameOverModal" type="Sprite" parent="."]
+position = Vector2( 0, -320 )
+z_index = 1
+texture = ExtResource( 17 )
+centered = false
+
+[node name="TitleLabel" type="Label" parent="GameOverModal"]
+margin_left = 80.0
+margin_top = 112.0
+margin_right = 560.0
+margin_bottom = 200.0
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 1, 0.819608, 0, 1 )
+custom_colors/font_color_shadow = Color( 0.0862745, 0.0901961, 0.101961, 1 )
+custom_constants/shadow_offset_x = 0
+custom_constants/shadow_offset_y = 2
+text = "GAME OVER"
+align = 1
+valign = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InstructionsLabel" type="Label" parent="GameOverModal"]
+margin_left = 192.0
+margin_top = 192.0
+margin_right = 672.0
+margin_bottom = 264.0
+rect_scale = Vector2( 0.5, 0.5 )
+custom_fonts/font = ExtResource( 16 )
+custom_colors/font_color = Color( 0.937255, 0.94902, 0.956863, 1 )
+custom_colors/font_color_shadow = Color( 0.137255, 0.286275, 0.458824, 1 )
+custom_constants/shadow_offset_x = 0
+custom_constants/shadow_offset_y = 2
+text = "Press start"
+align = 1
+valign = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="timeout" from="TickTimer" to="." method="_on_TickTimer_timeout"]
